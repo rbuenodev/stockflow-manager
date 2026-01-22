@@ -18,6 +18,7 @@ export class ProductsService {
         price: createProductDto.price,
         stockQuantity: createProductDto.stockQuantity,
         organizationId: createProductDto.organizationId,
+        isActive: createProductDto.isActive !== undefined ? createProductDto.isActive : true,
       },
     });
   }
@@ -39,8 +40,16 @@ export class ProductsService {
     return org;
   }
 
-  findAll() {
-    return this.prisma.product.findMany();
+  findAll(userRole?: string) {
+    if (userRole === 'ADMIN' || userRole === 'SUPERADMIN') {
+      return this.prisma.product.findMany({
+        orderBy: { name: 'asc' }
+      });
+    }
+    return this.prisma.product.findMany({
+      where: { isActive: true },
+      orderBy: { name: 'asc' }
+    });
   }
 
   findOne(id: string) {

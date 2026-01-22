@@ -13,15 +13,16 @@ export declare class ConsumptionService {
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     }>;
     findPendingByUser(userId: string): Prisma.PrismaPromise<({
         product: {
@@ -32,15 +33,16 @@ export declare class ConsumptionService {
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     })[]>;
     findAllPending(): Prisma.PrismaPromise<({
         user: {
@@ -61,15 +63,16 @@ export declare class ConsumptionService {
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     })[]>;
     processConsumption(userId: string): Promise<void>;
 }

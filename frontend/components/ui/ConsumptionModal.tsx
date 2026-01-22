@@ -5,6 +5,7 @@ interface Product {
   id: string;
   name: string;
   stockQuantity: number;
+  isActive: boolean;
 }
 
 interface ConsumptionModalProps {

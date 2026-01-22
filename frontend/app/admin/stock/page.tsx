@@ -10,6 +10,7 @@ interface Product {
   name: string;
   price: number;
   stockQuantity: number;
+  isActive: boolean;
 }
 
 export default function StockManagement() {
@@ -42,13 +43,21 @@ export default function StockManagement() {
     }
   };
 
-  const handleUpdateProduct = async (id: string, price: number, stockQuantity: number) => {
+  const handleUpdateProduct = async (id: string, price: number, stockQuantity: number, isActive?: boolean) => {
     try {
-      await api.patch(`/products/${id}`, { 
+      const product = products.find(p => p.id === id);
+      const payload = { 
         price: Number(price), 
-        stockQuantity: Number(stockQuantity) 
-      });
-      setProducts(products.map(p => p.id === id ? { ...p, price: Number(price), stockQuantity: Number(stockQuantity) } : p));
+        stockQuantity: Number(stockQuantity),
+        isActive: isActive !== undefined ? isActive : product?.isActive
+      };
+      await api.patch(`/products/${id}`, payload);
+      setProducts(products.map(p => p.id === id ? { 
+        ...p, 
+        price: payload.price, 
+        stockQuantity: payload.stockQuantity, 
+        isActive: payload.isActive ?? p.isActive 
+      } : p));
     } catch (err) {
       alert('Falha ao atualizar produto');
     }
@@ -136,12 +145,16 @@ export default function StockManagement() {
 
         <div className="space-y-4">
             {filteredProducts.map(product => (
-                <div key={product.id} className="bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-gray-50 group hover:border-[var(--primary-color)]/20 transition-all overflow-hidden">
+                <div key={product.id} className={`bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-gray-50 group hover:border-[var(--primary-color)]/20 transition-all overflow-hidden ${!product.isActive ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex items-center justify-between gap-3 sm:gap-4">
                         <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl bg-blue-50 flex items-center justify-center text-[var(--primary-color)]">
-                                <Package size={24} />
-                            </div>
+                            <button 
+                                onClick={() => handleUpdateProduct(product.id, product.price, product.stockQuantity, !product.isActive)}
+                                className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl flex items-center justify-center transition-all ${product.isActive ? 'bg-blue-50 text-[var(--primary-color)]' : 'bg-gray-100 text-gray-400'}`}
+                                title={product.isActive ? "Inativar Produto" : "Ativar Produto"}
+                            >
+                                <Package size={24} className={!product.isActive ? 'opacity-50' : ''} />
+                            </button>
                             <div className="flex-1 min-w-0">
                                 <h3 className="font-black text-gray-800 uppercase tracking-tight text-base sm:text-lg leading-tight truncate">{product.name}</h3>
                                 <div className="flex items-center gap-2 mt-1">

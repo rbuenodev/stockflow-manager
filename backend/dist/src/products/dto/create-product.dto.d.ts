@@ -3,4 +3,5 @@ export declare class CreateProductDto {
     price: number;
     stockQuantity: number;
     organizationId?: string;
+    isActive?: boolean;
 }

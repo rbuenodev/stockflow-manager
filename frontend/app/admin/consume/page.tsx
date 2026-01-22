@@ -14,6 +14,7 @@ interface Product {
   name: string;
   stockQuantity: number;
   price?: number;
+  isActive: boolean;
 }
 
 interface ConsumptionItem {
@@ -86,7 +87,7 @@ export default function AdminConsumePage() {
   };
 
   const filteredProducts = products.filter(p => 
-      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      p.isActive && p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

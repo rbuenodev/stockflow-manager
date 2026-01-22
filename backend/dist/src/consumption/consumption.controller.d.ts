@@ -12,15 +12,16 @@ export declare class ConsumptionController {
             updatedAt: Date;
             price: import("@prisma/client/runtime/library").Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     }>;
     findMyConsumption(req: any): import(".prisma/client").Prisma.PrismaPromise<({
         product: {
@@ -31,15 +32,16 @@ export declare class ConsumptionController {
             updatedAt: Date;
             price: import("@prisma/client/runtime/library").Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     })[]>;
     findAllPending(): import(".prisma/client").Prisma.PrismaPromise<({
         user: {
@@ -60,15 +62,16 @@ export declare class ConsumptionController {
             updatedAt: Date;
             price: import("@prisma/client/runtime/library").Decimal;
             stockQuantity: number;
+            isActive: boolean;
         };
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
-        productId: string;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
+        productId: string;
     })[]>;
     checkout(userId: string): Promise<void>;
 }

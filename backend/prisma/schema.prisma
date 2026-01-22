@@ -55,6 +55,7 @@ model Product {
   name           String
   price          Decimal
   stockQuantity  Int
+  isActive       Boolean @default(true)
   
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])

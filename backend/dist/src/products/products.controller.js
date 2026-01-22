@@ -38,8 +38,9 @@ let ProductsController = class ProductsController {
     batchUpdate(batchUpdateProductDto) {
         return this.productsService.batchUpdate(batchUpdateProductDto);
     }
-    findAll() {
-        return this.productsService.findAll();
+    findAll(req) {
+        var _a;
+        return this.productsService.findAll((_a = req.user) === null || _a === void 0 ? void 0 : _a.role);
     }
     findOne(id) {
         return this.productsService.findOne(id);
@@ -71,8 +72,9 @@ __decorate([
 ], ProductsController.prototype, "batchUpdate", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "findAll", null);
 __decorate([

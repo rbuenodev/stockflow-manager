@@ -14,4 +14,7 @@ export class CreateProductDto {
   @IsString()
   @IsOptional()
   organizationId?: string;
+
+  @IsOptional()
+  isActive?: boolean;
 }

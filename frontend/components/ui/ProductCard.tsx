@@ -4,8 +4,9 @@ import { Plus } from 'lucide-react';
 interface Product {
   id: string;
   name: string;
-  price?: number; // Optional if not always shown
+  price?: number;
   stockQuantity: number;
+  isActive: boolean;
 }
 
 interface ProductCardProps {
