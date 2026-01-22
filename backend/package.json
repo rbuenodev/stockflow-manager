@@ -11,6 +11,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "npm run prisma:generate && npm run prisma:deploy && nest build",
+    "vercel-build": "npm run prisma:generate && npm run prisma:deploy && nest build",
     "postinstall": "npm run prisma:generate",
     "prisma:dev": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
