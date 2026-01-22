@@ -34,10 +34,14 @@ let UsersService = class UsersService {
     findOne(id) {
         return this.prisma.user.findUnique({ where: { id } });
     }
-    update(id, updateUserDto) {
+    async update(id, updateUserDto) {
+        const data = Object.assign({}, updateUserDto);
+        if (data.password) {
+            data.password = await bcrypt.hash(data.password, 10);
+        }
         return this.prisma.user.update({
             where: { id },
-            data: updateUserDto,
+            data,
         });
     }
     remove(id) {

@@ -7,7 +7,8 @@ import StatsCard from '@/components/ui/StatsCard';
 import ProductCard from '@/components/ui/ProductCard';
 import ConsumptionModal from '@/components/ui/ConsumptionModal';
 import BottomNav from '@/components/layout/BottomNav';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import ChangePasswordModal from '@/components/ui/ChangePasswordModal';
+import { Search, SlidersHorizontal, Lock, LogOut } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -34,6 +35,7 @@ export default function UserDashboard() {
   // Modal State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -99,20 +101,28 @@ export default function UserDashboard() {
                  <p className="text-blue-100 text-sm font-medium">Bem vindo(a),</p>
                  <h1 className="text-2xl font-bold">{user?.name}</h1>
              </div>
-             <div className="flex items-center gap-3">
-                 <button 
-                     onClick={logout}
-                     className="text-white/80 hover:text-white text-sm font-medium pr-2 border-r border-white/20"
-                 >
-                     Sair
-                 </button>
-                 {config?.logoUrl ? (
-                     <img src={config.logoUrl} alt="Logo" className="w-10 h-10 rounded-full bg-white/20 p-1" />
-                 ) : (
-                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
-                        {user?.name?.substring(0,1).toUpperCase() || 'U'}
-                    </div>
-                 )}
+             <div className="flex items-center gap-2">
+                  <button 
+                      onClick={() => setIsPasswordModalOpen(true)}
+                      className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all active:scale-90"
+                      title="Trocar Senha"
+                  >
+                      <Lock size={20} strokeWidth={2.5} />
+                  </button>
+                  <button 
+                      onClick={logout}
+                      className="w-10 h-10 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-xl text-white transition-all active:scale-90"
+                      title="Sair"
+                  >
+                      <LogOut size={20} strokeWidth={2.5} />
+                  </button>
+                  {config?.logoUrl ? (
+                      <img src={config.logoUrl} alt="Logo" className="w-10 h-10 rounded-xl bg-white/20 p-1 object-contain" />
+                  ) : (
+                     <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white font-bold">
+                         {user?.name?.substring(0,1).toUpperCase() || 'U'}
+                     </div>
+                  )}
              </div>
          </div>
       </header>
@@ -187,6 +197,11 @@ export default function UserDashboard() {
             onConfirm={handleConfirmConsumption}
           />
       )}
+
+      <ChangePasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setIsPasswordModalOpen(false)} 
+      />
 
       {/* Bottom Navigation */}
       <BottomNav isAdmin={user?.role === 'ADMIN' || user?.role === 'SUPERADMIN'} />

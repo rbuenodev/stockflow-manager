@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/api/api';
 import Link from 'next/link';
-import { Trash2, UserPlus, ArrowLeft, Search, User as UserIcon, Mail, Shield, Users } from 'lucide-react';
+import { Trash2, UserPlus, ArrowLeft, Search, User as UserIcon, Mail, Shield, Users, Lock } from 'lucide-react';
 
 interface User {
   id: string;
@@ -23,6 +23,11 @@ export default function UserManagement() {
     password: '',
     role: 'USER'
   });
+
+  // Password Reset State
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     fetchUsers();
@@ -56,6 +61,20 @@ export default function UserManagement() {
       fetchUsers();
     } catch (err) {
       alert("Falha ao criar usuário");
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUser) return;
+    try {
+      await api.patch(`/users/${selectedUser.id}`, { password: newPassword });
+      setShowPasswordModal(false);
+      setNewPassword('');
+      setSelectedUser(null);
+      alert("Senha alterada com sucesso!");
+    } catch (err) {
+      alert("Falha ao alterar senha");
     }
   };
 
@@ -129,12 +148,25 @@ export default function UserManagement() {
                         </span>
 
                         {user.role !== 'SUPERADMIN' && (
-                            <button 
-                                onClick={() => handleDelete(user.id)}
-                                className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all active:scale-95"
-                            >
-                                <Trash2 size={20} />
-                            </button>
+                            <div className="flex items-center gap-1">
+                                <button 
+                                    onClick={() => {
+                                        setSelectedUser(user);
+                                        setShowPasswordModal(true);
+                                    }}
+                                    className="p-3 text-gray-300 hover:text-blue-500 hover:bg-blue-50 rounded-2xl transition-all active:scale-95"
+                                    title="Trocar Senha"
+                                >
+                                    <Lock size={20} />
+                                </button>
+                                <button 
+                                    onClick={() => handleDelete(user.id)}
+                                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all active:scale-95"
+                                    title="Excluir Usuário"
+                                >
+                                    <Trash2 size={20} />
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -236,6 +268,57 @@ export default function UserManagement() {
               </div>
           </div>
       )}
+
+      {/* Password Reset Modal */}
+      {showPasswordModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-[2.5rem] p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+                  <div className="flex items-center gap-4 mb-8">
+                      <div className="p-4 bg-gray-50 rounded-[1.5rem] text-[var(--primary-color)]">
+                          <Lock size={24} strokeWidth={3} />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-black text-gray-800 uppercase tracking-tighter">Alterar Senha</h3>
+                        <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">{selectedUser?.name}</p>
+                      </div>
+                  </div>
+
+                  <form onSubmit={handleResetPassword} className="space-y-6">
+                      <div className="space-y-1.5">
+                          <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Nova Senha</label>
+                          <input 
+                              required
+                              type="password"
+                              autoFocus
+                              value={newPassword}
+                              onChange={e => setNewPassword(e.target.value)}
+                              className="w-full bg-gray-50 border-2 border-transparent focus:border-[var(--primary-color)] focus:bg-white rounded-2xl py-4 px-6 text-gray-900 font-bold transition-all outline-none placeholder:text-gray-300"
+                              placeholder="••••••••"
+                          />
+                      </div>
+
+                      <div className="flex gap-4 pt-4">
+                          <button 
+                              type="button"
+                              onClick={() => {
+                                setShowPasswordModal(false);
+                                setNewPassword('');
+                              }}
+                              className="flex-1 px-4 py-4 border-2 border-gray-100 rounded-2xl font-black text-gray-400 uppercase tracking-widest text-xs hover:bg-gray-50 transition-colors"
+                          >
+                              Cancelar
+                          </button>
+                          <button 
+                              type="submit"
+                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg"
+                          >
+                              Salvar
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      )}
     </div>
-  );
+  )
 }
