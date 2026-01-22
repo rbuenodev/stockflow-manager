@@ -17,13 +17,21 @@ const consumption_module_1 = require("./consumption/consumption.module");
 const whitelabel_module_1 = require("./whitelabel/whitelabel.module");
 const metrics_module_1 = require("./metrics/metrics.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const core_1 = require("@nestjs/core");
+const api_key_guard_1 = require("./auth/api-key.guard");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, auth_module_1.AuthModule, products_module_1.ProductsModule, consumption_module_1.ConsumptionModule, whitelabel_module_1.WhitelabelModule, metrics_module_1.MetricsModule],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [
+            app_service_1.AppService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: api_key_guard_1.ApiKeyGuard,
+            },
+        ],
     })
 ], AppModule);
 exports.AppModule = AppModule;

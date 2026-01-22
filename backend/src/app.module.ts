@@ -9,9 +9,18 @@ import { WhitelabelModule } from './whitelabel/whitelabel.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { PrismaModule } from './prisma/prisma.module';
 
+import { APP_GUARD } from '@nestjs/core';
+import { ApiKeyGuard } from './auth/api-key.guard';
+
 @Module({
   imports: [PrismaModule, UsersModule, AuthModule, ProductsModule, ConsumptionModule, WhitelabelModule, MetricsModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyGuard,
+    },
+  ],
 })
 export class AppModule {}
