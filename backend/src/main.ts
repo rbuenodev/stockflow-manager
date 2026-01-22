@@ -1,42 +1,40 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, INestApplication } from '@nestjs/common';
-import { ExpressAdapter } from '@nestjs/platform-express';
-import express from 'express';
 
-// Cache the Nest app instance for serverless cold starts
-let cachedApp: INestApplication;
-const server = express();
+// Variável global para cachear o servidor entre invocações (Serverless optimization)
+let cachedServer: any;
 
-const bootstrap = async (expressInstance: any): Promise<INestApplication> => {
-  if (!cachedApp) {
-    const app = await NestFactory.create(
-      AppModule,
-      new ExpressAdapter(expressInstance),
-    );
+async function bootstrap() {
+  if (!cachedServer) {
+    // Deixe o Nest criar a instância do Express internamente
+    const app = await NestFactory.create(AppModule);
+    
     app.enableCors();
     app.useGlobalPipes(new ValidationPipe({
       transform: true,
       whitelist: true,
     }));
+    
+    // Inicializa o app, mas não chama .listen()
     await app.init();
-    cachedApp = app;
+    
+    // Extrai o servidor Express subjacente
+    cachedServer = app.getHttpAdapter().getInstance();
   }
-  return cachedApp;
-};
+  return cachedServer;
+}
 
-// Local development
+// Suporte para desenvolvimento local
 if (process.env.NODE_ENV !== 'production') {
-  bootstrap(server).then(() => {
-    const port = 3200;
-    server.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
-    });
+  bootstrap().then(server => {
+    const port = process.env.PORT || 3200;
+    server.listen(port, () => console.log(`🚀 Local server on http://localhost:${port}`));
   });
 }
 
-// Export for Vercel
+// Export para a Vercel
 export default async (req: any, res: any) => {
-  await bootstrap(server);
-  server(req, res);
+  const server = await bootstrap();
+  return server(req, res);
 };
