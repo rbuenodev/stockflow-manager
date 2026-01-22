@@ -53,7 +53,7 @@ export default function AdminDashboard() {
   };
 
   const handleCheckout = async (userId: string) => {
-    if(!confirm('Confirmar baixa para este usuário? Isso atualizará o estoque.')) return;
+    if(!confirm('Confirmar processamento destes itens?')) return;
     try {
       await api.post(`/consumption/checkout/${userId}`);
       fetchPending();
@@ -173,28 +173,28 @@ export default function AdminDashboard() {
                     <p className="text-gray-400 font-bold text-sm uppercase tracking-tight">Tudo limpo por aqui!</p>
                 </div>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {Object.entries(groupedItems).map(([userId, { name, items }]) => (
-                        <div key={userId} className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-50 group hover:border-[var(--primary-color)]/20 transition-all">
-                            <div className="flex justify-between items-start mb-6">
+                        <div key={userId} className="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50 group hover:border-[var(--primary-color)]/20 transition-all">
+                            <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <h3 className="font-black text-xl text-gray-800 uppercase tracking-tighter">{name}</h3>
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                                    <h3 className="font-black text-lg text-gray-800 uppercase tracking-tighter">{name}</h3>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
                                         {items.length} itens • {items.reduce((s, i) => s + i.quantity, 0)} un. total
                                     </p>
                                 </div>
                                 <button 
                                     onClick={() => handleCheckout(userId)}
-                                    className="bg-red-600 text-white px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20 active:scale-95"
+                                    className="bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20 active:scale-95"
                                 >
                                     Processar
                                 </button>
                             </div>
-                            <div className="space-y-3 bg-gray-50/50 p-4 rounded-2xl">
+                            <div className="space-y-1 bg-gray-50/50 p-3 rounded-2xl">
                                 {items.map(item => (
-                                    <div key={item.id} className="flex justify-between items-center group-hover:bg-white p-1 rounded-lg transition-colors">
-                                        <span className="text-sm font-bold text-gray-600 uppercase tracking-tight">{item.product.name}</span>
-                                        <span className="font-black text-gray-800 bg-white px-2 py-0.5 rounded-lg shadow-sm border border-gray-100">x{item.quantity}</span>
+                                    <div key={item.id} className="flex justify-between items-center p-1 rounded-lg transition-colors">
+                                        <span className="text-xs font-bold text-gray-600 uppercase tracking-tight">{item.product.name}</span>
+                                        <span className="font-black text-xs text-gray-800 bg-white px-2 py-0.5 rounded-lg shadow-sm border border-gray-100 italic">x{item.quantity}</span>
                                     </div>
                                 ))}
                             </div>

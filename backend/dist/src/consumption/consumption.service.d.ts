@@ -6,73 +6,73 @@ export declare class ConsumptionService {
     constructor(prisma: PrismaService);
     add(userId: string, createConsumptionDto: CreateConsumptionDto): Promise<{
         product: {
-            id: string;
             name: string;
-            organizationId: string;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
             isActive: boolean;
+            organizationId: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
         productId: string;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findPendingByUser(userId: string): Prisma.PrismaPromise<({
         product: {
-            id: string;
             name: string;
-            organizationId: string;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
             isActive: boolean;
+            organizationId: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
         productId: string;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
     findAllPending(): Prisma.PrismaPromise<({
         user: {
-            id: string;
-            email: string;
-            password: string;
             name: string;
-            role: import(".prisma/client").$Enums.Role;
-            organizationId: string | null;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
+            organizationId: string | null;
+            email: string;
+            password: string;
+            role: import(".prisma/client").$Enums.Role;
         };
         product: {
-            id: string;
             name: string;
-            organizationId: string;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             price: Prisma.Decimal;
             stockQuantity: number;
             isActive: boolean;
+            organizationId: string;
         };
     } & {
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         quantity: number;
         status: import(".prisma/client").$Enums.ConsumptionStatus;
         userId: string;
         productId: string;
+        createdAt: Date;
+        updatedAt: Date;
     })[]>;
-    processConsumption(userId: string): Promise<void>;
+    processConsumption(userId: string): Promise<Prisma.BatchPayload>;
 }

@@ -18,23 +18,29 @@ let ConsumptionService = class ConsumptionService {
         this.prisma = prisma;
     }
     async add(userId, createConsumptionDto) {
-        const product = await this.prisma.product.findUnique({
-            where: { id: createConsumptionDto.productId }
-        });
-        if (!product) {
-            throw new common_1.BadRequestException('Product not found');
-        }
-        if (product.stockQuantity < createConsumptionDto.quantity) {
-            throw new common_1.BadRequestException('Insufficient stock');
-        }
-        return this.prisma.consumptionItem.create({
-            data: {
-                userId,
-                productId: createConsumptionDto.productId,
-                quantity: createConsumptionDto.quantity,
-                status: client_1.ConsumptionStatus.PENDING,
-            },
-            include: { product: true }
+        return this.prisma.$transaction(async (tx) => {
+            const product = await tx.product.findUnique({
+                where: { id: createConsumptionDto.productId }
+            });
+            if (!product) {
+                throw new common_1.BadRequestException('Product not found');
+            }
+            if (product.stockQuantity < createConsumptionDto.quantity) {
+                throw new common_1.BadRequestException('Insufficient stock');
+            }
+            await tx.product.update({
+                where: { id: createConsumptionDto.productId },
+                data: { stockQuantity: { decrement: createConsumptionDto.quantity } }
+            });
+            return tx.consumptionItem.create({
+                data: {
+                    userId,
+                    productId: createConsumptionDto.productId,
+                    quantity: createConsumptionDto.quantity,
+                    status: client_1.ConsumptionStatus.PENDING,
+                },
+                include: { product: true }
+            });
         });
     }
     findPendingByUser(userId) {
@@ -52,27 +58,13 @@ let ConsumptionService = class ConsumptionService {
     async processConsumption(userId) {
         const pendingItems = await this.prisma.consumptionItem.findMany({
             where: { userId, status: client_1.ConsumptionStatus.PENDING },
-            include: { product: true }
         });
         if (pendingItems.length === 0) {
             throw new common_1.BadRequestException('No pending items to process');
         }
-        return this.prisma.$transaction(async (tx) => {
-            var _a;
-            for (const item of pendingItems) {
-                const product = await tx.product.findUnique({ where: { id: item.productId } });
-                if (!product || product.stockQuantity < item.quantity) {
-                    throw new common_1.BadRequestException(`Insufficient stock for product ${(_a = product === null || product === void 0 ? void 0 : product.name) !== null && _a !== void 0 ? _a : 'Unknown'}`);
-                }
-                await tx.product.update({
-                    where: { id: item.productId },
-                    data: { stockQuantity: { decrement: item.quantity } }
-                });
-                await tx.consumptionItem.update({
-                    where: { id: item.id },
-                    data: { status: client_1.ConsumptionStatus.PROCESSED }
-                });
-            }
+        return this.prisma.consumptionItem.updateMany({
+            where: { userId, status: client_1.ConsumptionStatus.PENDING },
+            data: { status: client_1.ConsumptionStatus.PROCESSED }
         });
     }
 };
