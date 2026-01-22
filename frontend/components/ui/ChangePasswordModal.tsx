@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, X } from 'lucide-react';
 import api from '@/api/api';
+import toast from 'react-hot-toast';
 
 interface ChangePasswordModalProps {
   isOpen: boolean;
@@ -17,19 +18,19 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      alert("As senhas não coincidem");
+      toast.error("As senhas não coincidem");
       return;
     }
 
     setLoading(true);
     try {
       await api.patch('/users/profile', { password: newPassword });
-      alert("Senha alterada com sucesso!");
+      toast.success("Senha alterada com sucesso!");
       onClose();
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      alert("Falha ao alterar senha");
+      toast.error("Falha ao alterar senha");
     } finally {
       setLoading(false);
     }

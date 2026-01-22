@@ -9,6 +9,7 @@ import ConsumptionModal from '@/components/ui/ConsumptionModal';
 import BottomNav from '@/components/layout/BottomNav';
 import ChangePasswordModal from '@/components/ui/ChangePasswordModal';
 import { Search, SlidersHorizontal, Lock, LogOut } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Product {
   id: string;
@@ -80,11 +81,12 @@ export default function UserDashboard() {
             productId: selectedProduct.id,
             quantity: quantity,
         });
+        toast.success('Consumo registrado com sucesso!');
         setIsModalOpen(false);
         setSelectedProduct(null);
         fetchConsumption(); // Refresh stats
       } catch (err) {
-        alert('Falha ao registrar consumo');
+        toast.error('Falha ao registrar consumo');
       }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import api from '@/api/api';
+import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { Trash2, UserPlus, ArrowLeft, Search, User as UserIcon, Mail, Shield, Users, Lock } from 'lucide-react';
 
@@ -47,8 +48,9 @@ export default function UserManagement() {
     try {
       await api.delete(`/users/${id}`);
       setUsers(users.filter(u => u.id !== id));
+      toast.success("Usuário excluído com sucesso!");
     } catch (err) {
-      alert("Falha ao excluir usuário");
+      toast.error("Falha ao excluir usuário");
     }
   };
 
@@ -59,8 +61,9 @@ export default function UserManagement() {
       setShowModal(false);
       setFormData({ name: '', email: '', password: '', role: 'USER' });
       fetchUsers();
+      toast.success("Usuário criado com sucesso!");
     } catch (err) {
-      alert("Falha ao criar usuário");
+      toast.error("Falha ao criar usuário");
     }
   };
 
@@ -72,9 +75,9 @@ export default function UserManagement() {
       setShowPasswordModal(false);
       setNewPassword('');
       setSelectedUser(null);
-      alert("Senha alterada com sucesso!");
+      toast.success("Senha alterada com sucesso!");
     } catch (err) {
-      alert("Falha ao alterar senha");
+      toast.error("Falha ao alterar senha");
     }
   };
 

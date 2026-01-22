@@ -6,6 +6,7 @@ import { useWhitelabel } from '@/context/WhitelabelContext';
 import Link from 'next/link';
 import { Package, AlertTriangle, Clock, Settings, BarChart3, Plus, Lock, LogOut } from 'lucide-react';
 import ChangePasswordModal from '@/components/ui/ChangePasswordModal';
+import toast from 'react-hot-toast';
 
 interface ConsumptionItem {
   id: string;
@@ -57,9 +58,9 @@ export default function AdminDashboard() {
       await api.post(`/consumption/checkout/${userId}`);
       fetchPending();
       fetchMetrics();
-      alert('Baixa realizada com sucesso!');
+      toast.success('Baixa realizada com sucesso!');
     } catch (err) {
-      alert('Falha ao processar baixa');
+      toast.error('Falha ao processar baixa');
     }
   };
 

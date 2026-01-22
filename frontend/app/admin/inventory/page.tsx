@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from '@/api/api';
 import Link from 'next/link';
 import { ArrowLeft, Check, Package, Info, Search } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Product {
   id: string;
@@ -48,10 +49,10 @@ export default function InventoryCount() {
       );
       
       await Promise.all(updates);
-      alert('Contagem física salva com sucesso!');
+      toast.success('Contagem física salva com sucesso!');
       fetchProducts();
     } catch (err) {
-      alert('Falha ao salvar contagem');
+      toast.error('Falha ao salvar contagem');
     }
   };
 

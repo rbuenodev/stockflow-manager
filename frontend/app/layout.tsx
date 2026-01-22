@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from 'react-hot-toast';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
         <WhitelabelProvider>
             <WhitelabelWrapper>
                 <AuthProvider>
+                    <Toaster position="top-right" />
                     {children}
                 </AuthProvider>
             </WhitelabelWrapper>

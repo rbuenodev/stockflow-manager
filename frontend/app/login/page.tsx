@@ -4,6 +4,7 @@ import api from '@/api/api';
 import { useAuth } from '@/context/AuthContext';
 import { useWhitelabel } from '@/context/WhitelabelContext';
 import { Mail, Lock, ArrowRight, AlertCircle, Loader2, Check } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -35,6 +36,7 @@ export default function LoginPage() {
 
     try {
       const res = await api.post('/auth/login', { email, password });
+      toast.success(`Bem-vindo, ${res.data.user.name}!`);
       login(res.data.access_token, res.data.user);
     } catch (err: any) {
       setError('Credenciais inválidas. Verifique seu e-mail e senha.');

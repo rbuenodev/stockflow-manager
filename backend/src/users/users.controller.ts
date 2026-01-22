@@ -26,7 +26,7 @@ export class UsersController {
 
   @Patch('profile')
   updateProfile(@Req() req: any, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(req.user.id, updateUserDto);
+    return this.usersService.update(req.user.userId, updateUserDto);
   }
 
   @Roles(Role.ADMIN, Role.SUPERADMIN)

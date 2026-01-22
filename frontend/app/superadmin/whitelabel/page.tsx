@@ -4,6 +4,7 @@ import api from '@/api/api';
 import Link from 'next/link';
 import { useWhitelabel } from '@/context/WhitelabelContext';
 import { ArrowLeft, Palette, Save, Globe, Type, Image as ImageIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function WhitelabelConfig() {
   const configContext = useWhitelabel();
@@ -33,10 +34,10 @@ export default function WhitelabelConfig() {
     try {
         await api.patch('/whitelabel', formData);
         await configContext.refreshConfig(); 
-        alert('Configuração salva com sucesso!');
+        toast.success('Configuração salva com sucesso!');
     } catch (err: any) {
         console.error('Error saving whitelabel:', err);
-        alert(`Falha ao salvar: ${err.response?.data?.message || err.message}`);
+        toast.error(`Falha ao salvar: ${err.response?.data?.message || err.message}`);
     } finally {
         setSaving(false);
     }

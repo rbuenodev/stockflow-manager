@@ -8,6 +8,7 @@ import ProductCard from '@/components/ui/ProductCard';
 import ConsumptionModal from '@/components/ui/ConsumptionModal';
 import Link from 'next/link';
 import { ArrowLeft, Search, SlidersHorizontal, Package } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Product {
   id: string;
@@ -78,11 +79,12 @@ export default function AdminConsumePage() {
             productId: selectedProduct.id,
             quantity: quantity,
         });
+        toast.success('Consumo registrado com sucesso!');
         setIsModalOpen(false);
         setSelectedProduct(null);
         fetchConsumption();
       } catch (err) {
-        alert('Falha ao registrar consumo');
+        toast.error('Falha ao registrar consumo');
       }
   };
 

@@ -32,7 +32,7 @@ let UsersController = class UsersController {
         return this.usersService.findAll();
     }
     updateProfile(req, updateUserDto) {
-        return this.usersService.update(req.user.id, updateUserDto);
+        return this.usersService.update(req.user.userId, updateUserDto);
     }
     findOne(id) {
         return this.usersService.findOne(id);

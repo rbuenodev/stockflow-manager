@@ -4,6 +4,7 @@ import api from '@/api/api';
 import { useWhitelabel } from '@/context/WhitelabelContext';
 import Link from 'next/link';
 import { ArrowLeft, Plus, TrendingUp, Package, Search } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Product {
   id: string;
@@ -58,8 +59,9 @@ export default function StockManagement() {
         stockQuantity: payload.stockQuantity, 
         isActive: payload.isActive ?? p.isActive 
       } : p));
+      toast.success('Produto atualizado!');
     } catch (err) {
-      alert('Falha ao atualizar produto');
+      toast.error('Falha ao atualizar produto');
     }
   };
 
@@ -70,11 +72,11 @@ export default function StockManagement() {
         value: Number(batchValue),
         stockAdjustment: Number(stockAdjustment)
       });
-      alert('Atualização em lote realizada!');
+      toast.success('Atualização em lote realizada!');
       setShowBatchModal(false);
       fetchProducts();
     } catch (err) {
-      alert('Falha na atualização em lote');
+      toast.error('Falha na atualização em lote');
     }
   };
 
@@ -82,12 +84,12 @@ export default function StockManagement() {
     e.preventDefault();
     try {
       await api.post('/products', newProduct);
-      alert('Produto criado com sucesso!');
+      toast.success('Produto criado com sucesso!');
       setShowCreateModal(false);
       setNewProduct({ name: '', price: 0, stockQuantity: 0 });
       fetchProducts();
     } catch (err: any) {
-      alert(`Falha ao criar produto: ${err.response?.data?.message || err.message}`);
+      toast.error(`Falha ao criar produto: ${err.response?.data?.message || err.message}`);
     }
   };
 
