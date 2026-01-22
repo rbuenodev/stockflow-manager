@@ -15,9 +15,10 @@ var BatchUpdateType;
 (function (BatchUpdateType) {
     BatchUpdateType["PERCENTAGE"] = "PERCENTAGE";
     BatchUpdateType["FIXED"] = "FIXED";
-})(BatchUpdateType = exports.BatchUpdateType || (exports.BatchUpdateType = {}));
+})(BatchUpdateType || (exports.BatchUpdateType = BatchUpdateType = {}));
 class BatchUpdateProductDto {
 }
+exports.BatchUpdateProductDto = BatchUpdateProductDto;
 __decorate([
     (0, class_validator_1.IsEnum)(BatchUpdateType),
     __metadata("design:type", String)
@@ -31,5 +32,4 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], BatchUpdateProductDto.prototype, "stockAdjustment", void 0);
-exports.BatchUpdateProductDto = BatchUpdateProductDto;
 //# sourceMappingURL=batch-update-product.dto.js.map

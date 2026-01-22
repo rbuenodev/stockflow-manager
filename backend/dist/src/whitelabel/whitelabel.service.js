@@ -41,9 +41,9 @@ let WhitelabelService = class WhitelabelService {
         });
     }
 };
-WhitelabelService = __decorate([
+exports.WhitelabelService = WhitelabelService;
+exports.WhitelabelService = WhitelabelService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], WhitelabelService);
-exports.WhitelabelService = WhitelabelService;
 //# sourceMappingURL=whitelabel.service.js.map

@@ -13,12 +13,12 @@ const metrics_controller_1 = require("./metrics.controller");
 const prisma_module_1 = require("../prisma/prisma.module");
 let MetricsModule = class MetricsModule {
 };
-MetricsModule = __decorate([
+exports.MetricsModule = MetricsModule;
+exports.MetricsModule = MetricsModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule],
         controllers: [metrics_controller_1.MetricsController],
         providers: [metrics_service_1.MetricsService],
     })
 ], MetricsModule);
-exports.MetricsModule = MetricsModule;
 //# sourceMappingURL=metrics.module.js.map

@@ -13,6 +13,7 @@ exports.UpdateWhitelabelDto = void 0;
 const class_validator_1 = require("class-validator");
 class UpdateWhitelabelDto {
 }
+exports.UpdateWhitelabelDto = UpdateWhitelabelDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsOptional)(),
@@ -35,5 +36,4 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateWhitelabelDto.prototype, "logoUrl", void 0);
-exports.UpdateWhitelabelDto = UpdateWhitelabelDto;
 //# sourceMappingURL=update-whitelabel.dto.js.map

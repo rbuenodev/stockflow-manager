@@ -27,6 +27,7 @@ let WhitelabelController = class WhitelabelController {
         return this.whitelabelService.update(updateWhitelabelDto);
     }
 };
+exports.WhitelabelController = WhitelabelController;
 __decorate([
     (0, common_1.Get)('config'),
     __metadata("design:type", Function),
@@ -40,9 +41,8 @@ __decorate([
     __metadata("design:paramtypes", [update_whitelabel_dto_1.UpdateWhitelabelDto]),
     __metadata("design:returntype", void 0)
 ], WhitelabelController.prototype, "update", null);
-WhitelabelController = __decorate([
+exports.WhitelabelController = WhitelabelController = __decorate([
     (0, common_1.Controller)('whitelabel'),
     __metadata("design:paramtypes", [whitelabel_service_1.WhitelabelService])
 ], WhitelabelController);
-exports.WhitelabelController = WhitelabelController;
 //# sourceMappingURL=whitelabel.controller.js.map

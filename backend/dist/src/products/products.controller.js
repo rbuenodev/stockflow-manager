@@ -51,6 +51,7 @@ let ProductsController = class ProductsController {
         return this.productsService.remove(id);
     }
 };
+exports.ProductsController = ProductsController;
 __decorate([
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN, client_1.Role.SUPERADMIN),
     (0, common_1.Post)(),
@@ -98,10 +99,9 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ProductsController.prototype, "remove", null);
-ProductsController = __decorate([
+exports.ProductsController = ProductsController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], ProductsController);
-exports.ProductsController = ProductsController;
 //# sourceMappingURL=products.controller.js.map

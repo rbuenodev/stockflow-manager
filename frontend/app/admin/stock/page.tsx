@@ -42,12 +42,15 @@ export default function StockManagement() {
     }
   };
 
-  const handleUpdateStock = async (id: string, newQuantity: number) => {
+  const handleUpdateProduct = async (id: string, price: number, stockQuantity: number) => {
     try {
-      await api.patch(`/products/${id}`, { stockQuantity: Number(newQuantity) });
-      setProducts(products.map(p => p.id === id ? { ...p, stockQuantity: Number(newQuantity) } : p));
+      await api.patch(`/products/${id}`, { 
+        price: Number(price), 
+        stockQuantity: Number(stockQuantity) 
+      });
+      setProducts(products.map(p => p.id === id ? { ...p, price: Number(price), stockQuantity: Number(stockQuantity) } : p));
     } catch (err) {
-      alert('Falha ao atualizar estoque');
+      alert('Falha ao atualizar produto');
     }
   };
 
@@ -143,37 +146,63 @@ export default function StockManagement() {
                                 <h3 className="font-black text-gray-800 uppercase tracking-tight text-base sm:text-lg leading-tight truncate">{product.name}</h3>
                                 <div className="flex items-center gap-2 mt-1">
                                     <span className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest whitespace-nowrap">Preço</span>
-                                    <span className="text-sm font-bold text-[var(--primary-color)]">R$ {Number(product.price).toFixed(2)}</span>
+                                    <div className="flex items-center bg-gray-50 px-2 py-0.5 rounded-lg border border-gray-100 focus-within:border-[var(--primary-color)]/30 transition-all">
+                                        <span className="text-xs font-bold text-[var(--primary-color)] mr-0.5">R$</span>
+                                        <input 
+                                            id={`price-input-${product.id}`}
+                                            type="number" 
+                                            step="0.01"
+                                            className="w-16 bg-transparent border-none p-0 text-sm font-bold text-[var(--primary-color)] outline-none"
+                                            defaultValue={Number(product.price).toFixed(2)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    const stockInput = document.getElementById(`stock-input-${product.id}`) as HTMLInputElement;
+                                                    handleUpdateProduct(product.id, Number((e.target as HTMLInputElement).value), Number(stockInput.value));
+                                                    (e.target as HTMLInputElement).blur();
+                                                    const btn = document.getElementById(`save-btn-${product.id}`);
+                                                    if (btn) btn.style.display = 'none';
+                                                }
+                                            }}
+                                            onChange={(e) => {
+                                                const btn = document.getElementById(`save-btn-${product.id}`);
+                                                const stockInput = document.getElementById(`stock-input-${product.id}`) as HTMLInputElement;
+                                                if (btn && stockInput) {
+                                                    const priceChanged = Number(e.target.value) !== Number(product.price);
+                                                    const stockChanged = Number(stockInput.value) !== Number(product.stockQuantity);
+                                                    btn.style.display = (priceChanged || stockChanged) ? 'flex' : 'none';
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 p-1.5 sm:p-2 rounded-2xl border border-gray-100 shrink-0">
-                            <div className="text-center px-1 sm:px-2 border-r border-gray-200 pr-2 sm:pr-3">
-                                <p className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase leading-none mb-1">Atual</p>
-                                <p className="text-base sm:text-xl font-black text-gray-800 leading-none">{product.stockQuantity}</p>
-                            </div>
                             <div className="flex flex-col items-center">
-                                <p className="text-[8px] sm:text-[9px] font-black text-[var(--primary-color)] uppercase leading-none mb-1">Novo</p>
+                                <p className="text-[8px] sm:text-[9px] font-black text-[var(--primary-color)] uppercase leading-none mb-1 text-center">Estoque</p>
                                 <div className="relative group/input">
                                     <input 
+                                        id={`stock-input-${product.id}`}
                                         type="number" 
                                         className="w-14 h-10 sm:w-20 sm:h-12 bg-white border-2 border-gray-100 focus:border-[var(--primary-color)] rounded-xl text-center font-black text-gray-900 shadow-sm outline-none transition-all"
                                         defaultValue={product.stockQuantity}
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
-                                                handleUpdateStock(product.id, Number((e.target as HTMLInputElement).value));
+                                                const priceInput = document.getElementById(`price-input-${product.id}`) as HTMLInputElement;
+                                                handleUpdateProduct(product.id, Number(priceInput.value), Number((e.target as HTMLInputElement).value));
                                                 (e.target as HTMLInputElement).blur();
+                                                const btn = document.getElementById(`save-btn-${product.id}`);
+                                                if (btn) btn.style.display = 'none';
                                             }
                                         }}
                                         onChange={(e) => {
                                             const btn = document.getElementById(`save-btn-${product.id}`);
-                                            if (btn) {
-                                                if (Number(e.target.value) !== product.stockQuantity) {
-                                                    btn.style.display = 'flex';
-                                                } else {
-                                                    btn.style.display = 'none';
-                                                }
+                                            const priceInput = document.getElementById(`price-input-${product.id}`) as HTMLInputElement;
+                                            if (btn && priceInput) {
+                                                const priceChanged = Number(priceInput.value) !== Number(product.price);
+                                                const stockChanged = Number(e.target.value) !== Number(product.stockQuantity);
+                                                btn.style.display = (priceChanged || stockChanged) ? 'flex' : 'none';
                                             }
                                         }}
                                         placeholder="--"
@@ -181,8 +210,9 @@ export default function StockManagement() {
                                     <button 
                                         id={`save-btn-${product.id}`}
                                         onClick={(e) => {
-                                            const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                                            handleUpdateStock(product.id, Number(input.value));
+                                            const priceInput = document.getElementById(`price-input-${product.id}`) as HTMLInputElement;
+                                            const stockInput = document.getElementById(`stock-input-${product.id}`) as HTMLInputElement;
+                                            handleUpdateProduct(product.id, Number(priceInput.value), Number(stockInput.value));
                                             e.currentTarget.style.display = 'none';
                                         }}
                                         className="absolute -right-2 -top-2 w-6 h-6 bg-green-500 text-white rounded-full hidden items-center justify-center shadow-lg hover:bg-green-600 transition-colors animate-in zoom-in"

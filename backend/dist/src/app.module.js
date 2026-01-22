@@ -21,7 +21,8 @@ const core_1 = require("@nestjs/core");
 const api_key_guard_1 = require("./auth/api-key.guard");
 let AppModule = class AppModule {
 };
-AppModule = __decorate([
+exports.AppModule = AppModule;
+exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule, users_module_1.UsersModule, auth_module_1.AuthModule, products_module_1.ProductsModule, consumption_module_1.ConsumptionModule, whitelabel_module_1.WhitelabelModule, metrics_module_1.MetricsModule],
         controllers: [app_controller_1.AppController],
@@ -34,5 +35,4 @@ AppModule = __decorate([
         ],
     })
 ], AppModule);
-exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

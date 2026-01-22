@@ -6,19 +6,19 @@ export declare class WhitelabelController {
     findDefault(): Promise<{
         id: string;
         name: string;
+        createdAt: Date;
+        updatedAt: Date;
         primaryColor: string;
         secondaryColor: string | null;
         logoUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     } | null>;
     update(updateWhitelabelDto: UpdateWhitelabelDto): Promise<{
         id: string;
         name: string;
+        createdAt: Date;
+        updatedAt: Date;
         primaryColor: string;
         secondaryColor: string | null;
         logoUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

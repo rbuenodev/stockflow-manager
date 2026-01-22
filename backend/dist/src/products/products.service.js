@@ -70,9 +70,9 @@ let ProductsService = class ProductsService {
         return { message: 'Batch update processing started' };
     }
 };
-ProductsService = __decorate([
+exports.ProductsService = ProductsService;
+exports.ProductsService = ProductsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], ProductsService);
-exports.ProductsService = ProductsService;
 //# sourceMappingURL=products.service.js.map

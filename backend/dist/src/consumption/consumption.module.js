@@ -12,11 +12,11 @@ const consumption_service_1 = require("./consumption.service");
 const consumption_controller_1 = require("./consumption.controller");
 let ConsumptionModule = class ConsumptionModule {
 };
-ConsumptionModule = __decorate([
+exports.ConsumptionModule = ConsumptionModule;
+exports.ConsumptionModule = ConsumptionModule = __decorate([
     (0, common_1.Module)({
         controllers: [consumption_controller_1.ConsumptionController],
         providers: [consumption_service_1.ConsumptionService]
     })
 ], ConsumptionModule);
-exports.ConsumptionModule = ConsumptionModule;
 //# sourceMappingURL=consumption.module.js.map

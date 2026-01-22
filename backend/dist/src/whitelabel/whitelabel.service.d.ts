@@ -5,28 +5,28 @@ export declare class WhitelabelService {
     findDefault(): Promise<{
         id: string;
         name: string;
+        createdAt: Date;
+        updatedAt: Date;
         primaryColor: string;
         secondaryColor: string | null;
         logoUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     } | null>;
     findOne(id: string): Promise<{
         id: string;
         name: string;
+        createdAt: Date;
+        updatedAt: Date;
         primaryColor: string;
         secondaryColor: string | null;
         logoUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     } | null>;
     update(updateWhitelabelDto: any): Promise<{
         id: string;
         name: string;
+        createdAt: Date;
+        updatedAt: Date;
         primaryColor: string;
         secondaryColor: string | null;
         logoUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
     }>;
 }

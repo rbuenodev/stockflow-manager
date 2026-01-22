@@ -13,6 +13,7 @@ exports.CreateConsumptionDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateConsumptionDto {
 }
+exports.CreateConsumptionDto = CreateConsumptionDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -23,5 +24,4 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
 ], CreateConsumptionDto.prototype, "quantity", void 0);
-exports.CreateConsumptionDto = CreateConsumptionDto;
 //# sourceMappingURL=create-consumption.dto.js.map

@@ -76,9 +76,9 @@ let ConsumptionService = class ConsumptionService {
         });
     }
 };
-ConsumptionService = __decorate([
+exports.ConsumptionService = ConsumptionService;
+exports.ConsumptionService = ConsumptionService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], ConsumptionService);
-exports.ConsumptionService = ConsumptionService;
 //# sourceMappingURL=consumption.service.js.map

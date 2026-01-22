@@ -47,9 +47,9 @@ let MetricsService = class MetricsService {
         };
     }
 };
-MetricsService = __decorate([
+exports.MetricsService = MetricsService;
+exports.MetricsService = MetricsService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], MetricsService);
-exports.MetricsService = MetricsService;
 //# sourceMappingURL=metrics.service.js.map

@@ -37,6 +37,7 @@ let ConsumptionController = class ConsumptionController {
         return this.consumptionService.processConsumption(userId);
     }
 };
+exports.ConsumptionController = ConsumptionController;
 __decorate([
     (0, common_1.Post)('add'),
     __param(0, (0, common_1.Req)()),
@@ -67,10 +68,9 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ConsumptionController.prototype, "checkout", null);
-ConsumptionController = __decorate([
+exports.ConsumptionController = ConsumptionController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.Controller)('consumption'),
     __metadata("design:paramtypes", [consumption_service_1.ConsumptionService])
 ], ConsumptionController);
-exports.ConsumptionController = ConsumptionController;
 //# sourceMappingURL=consumption.controller.js.map

@@ -12,11 +12,11 @@ const whitelabel_service_1 = require("./whitelabel.service");
 const whitelabel_controller_1 = require("./whitelabel.controller");
 let WhitelabelModule = class WhitelabelModule {
 };
-WhitelabelModule = __decorate([
+exports.WhitelabelModule = WhitelabelModule;
+exports.WhitelabelModule = WhitelabelModule = __decorate([
     (0, common_1.Module)({
         controllers: [whitelabel_controller_1.WhitelabelController],
         providers: [whitelabel_service_1.WhitelabelService]
     })
 ], WhitelabelModule);
-exports.WhitelabelModule = WhitelabelModule;
 //# sourceMappingURL=whitelabel.module.js.map
