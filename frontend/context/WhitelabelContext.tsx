@@ -11,6 +11,7 @@ interface WhitelabelConfig {
 
 interface WhitelabelContextType {
   config: WhitelabelConfig | null;
+  loading: boolean;
   refreshConfig: () => Promise<void>;
 }
 
@@ -18,6 +19,7 @@ const WhitelabelContext = createContext<WhitelabelContextType | undefined>(undef
 
 export function WhitelabelProvider({ children }: { children: React.ReactNode }) {
   const [config, setConfig] = useState<WhitelabelConfig | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchConfig = async () => {
     try {
@@ -36,6 +38,8 @@ export function WhitelabelProvider({ children }: { children: React.ReactNode }) 
       }
     } catch (err) {
       console.error("Failed to load whitelabel config", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,7 +48,7 @@ export function WhitelabelProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <WhitelabelContext.Provider value={{ config, refreshConfig: fetchConfig }}>
+    <WhitelabelContext.Provider value={{ config, loading, refreshConfig: fetchConfig }}>
       {children}
     </WhitelabelContext.Provider>
   );

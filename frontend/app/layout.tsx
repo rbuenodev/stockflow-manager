@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 
 import { AuthProvider } from "@/context/AuthContext";
 import { WhitelabelProvider } from "@/context/WhitelabelContext";
+import WhitelabelWrapper from "@/components/layout/WhitelabelWrapper";
 
 export default function RootLayout({
   children,
@@ -31,9 +32,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <WhitelabelProvider>
-            <AuthProvider>
-                {children}
-            </AuthProvider>
+            <WhitelabelWrapper>
+                <AuthProvider>
+                    {children}
+                </AuthProvider>
+            </WhitelabelWrapper>
         </WhitelabelProvider>
       </body>
     </html>

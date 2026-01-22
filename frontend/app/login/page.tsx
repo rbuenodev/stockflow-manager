@@ -48,11 +48,11 @@ export default function LoginPage() {
       {/* Dynamic Background Orbs */}
       <div 
         className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 animate-pulse"
-        style={{ backgroundColor: config?.primaryColor || '#2563eb' }}
+        style={{ backgroundColor: config?.primaryColor }}
       />
       <div 
         className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] rounded-full blur-[120px] opacity-20 animate-pulse"
-        style={{ backgroundColor: config?.secondaryColor || '#64748b' }}
+        style={{ backgroundColor: config?.secondaryColor }}
       />
 
       <div className="relative z-10 w-full max-w-md px-6">
