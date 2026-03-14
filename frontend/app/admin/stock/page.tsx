@@ -31,6 +31,11 @@ export default function StockManagement() {
   // Create Product State
   const [newProduct, setNewProduct] = useState({ name: '', price: 0, stockQuantity: 0 });
 
+  // Loading States
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [creatingProduct, setCreatingProduct] = useState(false);
+  const [batchUpdating, setBatchUpdating] = useState(false);
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -45,27 +50,32 @@ export default function StockManagement() {
   };
 
   const handleUpdateProduct = async (id: string, price: number, stockQuantity: number, isActive?: boolean) => {
+    if (loadingId === id) return;
+    setLoadingId(id);
     try {
       const product = products.find(p => p.id === id);
-      const payload = { 
-        price: Number(price), 
+      const payload = {
+        price: Number(price),
         stockQuantity: Number(stockQuantity),
         isActive: isActive !== undefined ? isActive : product?.isActive
       };
       await api.patch(`/products/${id}`, payload);
-      setProducts(products.map(p => p.id === id ? { 
-        ...p, 
-        price: payload.price, 
-        stockQuantity: payload.stockQuantity, 
-        isActive: payload.isActive ?? p.isActive 
+      setProducts(products.map(p => p.id === id ? {
+        ...p,
+        price: payload.price,
+        stockQuantity: payload.stockQuantity,
+        isActive: payload.isActive ?? p.isActive
       } : p));
       toast.success('Produto atualizado!');
     } catch (err) {
       toast.error('Falha ao atualizar produto');
+    } finally {
+      setLoadingId(null);
     }
   };
 
   const handleBatchUpdate = async () => {
+    setBatchUpdating(true);
     try {
       await api.patch('/products/batch', {
         type: batchType,
@@ -77,11 +87,14 @@ export default function StockManagement() {
       fetchProducts();
     } catch (err) {
       toast.error('Falha na atualização em lote');
+    } finally {
+      setBatchUpdating(false);
     }
   };
 
   const handleCreateProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCreatingProduct(true);
     try {
       await api.post('/products', newProduct);
       toast.success('Produto criado com sucesso!');
@@ -90,6 +103,8 @@ export default function StockManagement() {
       fetchProducts();
     } catch (err: any) {
       toast.error(`Falha ao criar produto: ${err.response?.data?.message || err.message}`);
+    } finally {
+      setCreatingProduct(false);
     }
   };
 
@@ -150,9 +165,10 @@ export default function StockManagement() {
                 <div key={product.id} className={`bg-white rounded-[2rem] p-4 sm:p-5 shadow-sm border border-gray-50 group hover:border-[var(--primary-color)]/20 transition-all overflow-hidden ${!product.isActive ? 'opacity-60 grayscale-[0.5]' : ''}`}>
                     <div className="flex items-center justify-between gap-3 sm:gap-4">
                         <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                            <button 
+                            <button
                                 onClick={() => handleUpdateProduct(product.id, product.price, product.stockQuantity, !product.isActive)}
-                                className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl flex items-center justify-center transition-all ${product.isActive ? 'bg-blue-50 text-[var(--primary-color)]' : 'bg-gray-100 text-gray-400'}`}
+                                disabled={loadingId === product.id}
+                                className={`w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed ${product.isActive ? 'bg-blue-50 text-[var(--primary-color)]' : 'bg-gray-100 text-gray-400'}`}
                                 title={product.isActive ? "Inativar Produto" : "Ativar Produto"}
                             >
                                 <Package size={24} className={!product.isActive ? 'opacity-50' : ''} />
@@ -222,7 +238,7 @@ export default function StockManagement() {
                                         }}
                                         placeholder="--"
                                     />
-                                    <button 
+                                    <button
                                         id={`save-btn-${product.id}`}
                                         onClick={(e) => {
                                             const priceInput = document.getElementById(`price-input-${product.id}`) as HTMLInputElement;
@@ -230,7 +246,8 @@ export default function StockManagement() {
                                             handleUpdateProduct(product.id, Number(priceInput.value), Number(stockInput.value));
                                             e.currentTarget.style.display = 'none';
                                         }}
-                                        className="absolute -right-2 -top-2 w-6 h-6 bg-green-500 text-white rounded-full hidden items-center justify-center shadow-lg hover:bg-green-600 transition-colors animate-in zoom-in"
+                                        disabled={loadingId === product.id}
+                                        className="absolute -right-2 -top-2 w-6 h-6 bg-green-500 text-white rounded-full hidden items-center justify-center shadow-lg hover:bg-green-600 transition-colors animate-in zoom-in disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Plus size={14} strokeWidth={4} />
                                     </button>
@@ -305,11 +322,12 @@ export default function StockManagement() {
                           >
                               Cancelar
                           </button>
-                          <button 
+                          <button
                               type="submit"
-                              className="flex-1 px-4 py-4 bg-green-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-green-500/20"
+                              disabled={creatingProduct}
+                              className="flex-1 px-4 py-4 bg-green-600 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-green-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
                           >
-                              Criar
+                              {creatingProduct ? 'Criando...' : 'Criar'}
                           </button>
                       </div>
                   </form>
@@ -357,11 +375,12 @@ export default function StockManagement() {
                           >
                               Cancelar
                           </button>
-                          <button 
+                          <button
                               onClick={handleBatchUpdate}
-                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-blue-500/20"
+                              disabled={batchUpdating}
+                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
                           >
-                              Aplicar
+                              {batchUpdating ? 'Aplicando...' : 'Aplicar'}
                           </button>
                       </div>
                   </div>

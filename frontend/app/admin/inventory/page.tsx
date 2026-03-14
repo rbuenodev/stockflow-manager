@@ -16,6 +16,7 @@ export default function InventoryCount() {
   const [products, setProducts] = useState<Product[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [searchTerm, setSearchTerm] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -42,17 +43,20 @@ export default function InventoryCount() {
 
   const handleSaveAll = async () => {
     if (!confirm('Confirmar contagem física? Isso atualizará todos os estoques.')) return;
-    
+
+    setSaving(true);
     try {
-      const updates = Object.entries(counts).map(([productId, counted]) => 
+      const updates = Object.entries(counts).map(([productId, counted]) =>
         api.patch(`/products/${productId}`, { stockQuantity: counted })
       );
-      
+
       await Promise.all(updates);
       toast.success('Contagem física salva com sucesso!');
       fetchProducts();
     } catch (err) {
       toast.error('Falha ao salvar contagem');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -80,12 +84,13 @@ export default function InventoryCount() {
                     <p className="text-blue-100 text-[10px] font-bold uppercase tracking-widest mt-1">Inventário Físico</p>
                  </div>
              </div>
-             <button 
+             <button
                   onClick={handleSaveAll}
-                  className="bg-white text-[var(--primary-color)] px-5 py-3 rounded-2xl shadow-lg active:scale-95 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest"
+                  disabled={saving}
+                  className="bg-white text-[var(--primary-color)] px-5 py-3 rounded-2xl shadow-lg active:scale-95 transition-all flex items-center gap-2 font-black text-xs uppercase tracking-widest disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                   <Check size={18} strokeWidth={3} />
-                  Salvar
+                  {saving ? 'Salvando...' : 'Salvar'}
               </button>
          </div>
       </header>

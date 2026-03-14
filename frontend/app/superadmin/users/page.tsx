@@ -30,6 +30,11 @@ export default function UserManagement() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [newPassword, setNewPassword] = useState('');
 
+  // Loading States
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [resettingPassword, setResettingPassword] = useState(false);
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -45,17 +50,21 @@ export default function UserManagement() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Deseja realmente excluir este usuário?")) return;
+    setDeletingId(id);
     try {
       await api.delete(`/users/${id}`);
       setUsers(users.filter(u => u.id !== id));
       toast.success("Usuário excluído com sucesso!");
     } catch (err) {
       toast.error("Falha ao excluir usuário");
+    } finally {
+      setDeletingId(null);
     }
   };
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCreating(true);
     try {
       await api.post('/users', formData);
       setShowModal(false);
@@ -64,12 +73,15 @@ export default function UserManagement() {
       toast.success("Usuário criado com sucesso!");
     } catch (err) {
       toast.error("Falha ao criar usuário");
+    } finally {
+      setCreating(false);
     }
   };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedUser) return;
+    setResettingPassword(true);
     try {
       await api.patch(`/users/${selectedUser.id}`, { password: newPassword });
       setShowPasswordModal(false);
@@ -78,6 +90,8 @@ export default function UserManagement() {
       toast.success("Senha alterada com sucesso!");
     } catch (err) {
       toast.error("Falha ao alterar senha");
+    } finally {
+      setResettingPassword(false);
     }
   };
 
@@ -162,9 +176,10 @@ export default function UserManagement() {
                                 >
                                     <Lock size={20} />
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => handleDelete(user.id)}
-                                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all active:scale-95"
+                                    disabled={deletingId === user.id}
+                                    className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                                     title="Excluir Usuário"
                                 >
                                     <Trash2 size={20} />
@@ -260,11 +275,12 @@ export default function UserManagement() {
                           >
                               Cancelar
                           </button>
-                          <button 
+                          <button
                               type="submit"
-                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg"
+                              disabled={creating}
+                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                           >
-                              Criar
+                              {creating ? 'Criando...' : 'Criar'}
                           </button>
                       </div>
                   </form>
@@ -311,11 +327,12 @@ export default function UserManagement() {
                           >
                               Cancelar
                           </button>
-                          <button 
+                          <button
                               type="submit"
-                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg"
+                              disabled={resettingPassword}
+                              className="flex-1 px-4 py-4 bg-[var(--primary-color)] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                           >
-                              Salvar
+                              {resettingPassword ? 'Salvando...' : 'Salvar'}
                           </button>
                       </div>
                   </form>

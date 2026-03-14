@@ -28,6 +28,7 @@ export default function AdminDashboard() {
   const [pendingItems, setPendingItems] = useState<ConsumptionItem[]>([]);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [checkoutLoadingId, setCheckoutLoadingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPending();
@@ -54,6 +55,7 @@ export default function AdminDashboard() {
 
   const handleCheckout = async (userId: string) => {
     if(!confirm('Confirmar processamento destes itens?')) return;
+    setCheckoutLoadingId(userId);
     try {
       await api.post(`/consumption/checkout/${userId}`);
       fetchPending();
@@ -61,6 +63,8 @@ export default function AdminDashboard() {
       toast.success('Baixa realizada com sucesso!');
     } catch (err) {
       toast.error('Falha ao processar baixa');
+    } finally {
+      setCheckoutLoadingId(null);
     }
   };
 
@@ -183,11 +187,12 @@ export default function AdminDashboard() {
                                         {items.length} itens • {items.reduce((s, i) => s + i.quantity, 0)} un. total
                                     </p>
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => handleCheckout(userId)}
-                                    className="bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20 active:scale-95"
+                                    disabled={checkoutLoadingId === userId}
+                                    className="bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-colors shadow-lg shadow-red-500/20 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
-                                    Processar
+                                    {checkoutLoadingId === userId ? 'Processando...' : 'Processar'}
                                 </button>
                             </div>
                             <div className="space-y-1 bg-gray-50/50 p-3 rounded-2xl">

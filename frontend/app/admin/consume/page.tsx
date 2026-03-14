@@ -35,6 +35,7 @@ export default function AdminConsumePage() {
   // Modal State
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -73,7 +74,7 @@ export default function AdminConsumePage() {
 
   const handleConfirmConsumption = async (quantity: number) => {
       if (!selectedProduct) return;
-      
+      setConfirming(true);
       try {
         await api.post('/consumption/add', {
             productId: selectedProduct.id,
@@ -85,6 +86,8 @@ export default function AdminConsumePage() {
         fetchConsumption();
       } catch (err) {
         toast.error('Falha ao registrar consumo');
+      } finally {
+        setConfirming(false);
       }
   };
 
@@ -181,11 +184,12 @@ export default function AdminConsumePage() {
 
       {/* Modals */}
       {selectedProduct && (
-          <ConsumptionModal 
+          <ConsumptionModal
             product={selectedProduct}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleConfirmConsumption}
+            loading={confirming}
           />
       )}
     </div>

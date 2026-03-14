@@ -13,9 +13,10 @@ interface ConsumptionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (quantity: number) => void;
+  loading?: boolean;
 }
 
-export default function ConsumptionModal({ product, isOpen, onClose, onConfirm }: ConsumptionModalProps) {
+export default function ConsumptionModal({ product, isOpen, onClose, onConfirm, loading }: ConsumptionModalProps) {
   const [quantity, setQuantity] = useState(1);
 
   if (!isOpen) return null;
@@ -74,11 +75,12 @@ export default function ConsumptionModal({ product, isOpen, onClose, onConfirm }
             </button>
         </div>
 
-        <button 
+        <button
             onClick={handleConfirm}
-            className="w-full bg-[var(--primary-color)] text-white font-bold py-4 rounded-xl text-lg hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/30"
+            disabled={loading}
+            className="w-full bg-[var(--primary-color)] text-white font-bold py-4 rounded-xl text-lg hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/30 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-            Confirmar Consumo
+            {loading ? 'Registrando...' : 'Confirmar Consumo'}
         </button>
       </div>
     </div>
